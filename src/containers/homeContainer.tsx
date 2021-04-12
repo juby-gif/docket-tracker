@@ -6,6 +6,8 @@ import { AppState } from '../store/rootStore';
 import { addItem } from '../store/task/taskAction';
 
 const HomeComponent = lazy(()=> import ('../components/homeComponent'));
+
+
 interface IProps{
 
 }
@@ -14,11 +16,11 @@ interface StateProps{
     bucketItem : string;
 }
 
-interface New {
+interface NewProps {
     handleClick : (data:string) => void;
 }
 
-type Props = IProps & AppState & New & RouteComponentProps
+type Props = IProps & AppState & NewProps & RouteComponentProps
 
 
 class HomeContainer extends Component <Props,StateProps> {
@@ -65,7 +67,6 @@ render(){
 }
 }
 
-
 const mapStateToProps = (state: AppState) => ({
     task: state.task,
   });
@@ -73,17 +74,5 @@ const mapStateToProps = (state: AppState) => ({
   const mapDispatchToProps = (dispatch: Dispatch) => ({
     handleClick: (data:string) => dispatch(addItem(data))
   });
-// const mapStateToProps = (state:AppState) => {
-//     return {
-//         task: state.task
-//     }
-// }
 
-// const mapDispatchToProps = (dispatch: Dispatch) =>
-//   bindActionCreators(
-//     {
-//       addItem
-//     },
-//     dispatch
-//   );
 export default connect(mapStateToProps,mapDispatchToProps)(HomeContainer);
