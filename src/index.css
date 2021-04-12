@@ -37,9 +37,14 @@ code {
 
 .header > input:focus {
   outline-width: 0;
-  border-color: aqua;
 }
 
 .list-items {
   text-align: justify;
+}
+
+.container {
+  position: fixed;
+  max-width:30rem;
+  overflow-wrap: break-word;
 }
