@@ -1,5 +1,9 @@
 import React, { Component,lazy } from 'react';
 import { RouteComponentProps } from 'react-router';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import { AppState } from '../store/rootStore';
+import { addItem } from '../store/task/taskAction';
 
 const HomeComponent = lazy(()=> import ('../components/homeComponent'));
 interface IProps{
@@ -7,28 +11,79 @@ interface IProps{
 }
 
 interface StateProps{
-}
-export default class HomeContainer extends Component <IProps & RouteComponentProps,StateProps> {
-constructor(props:IProps & RouteComponentProps){
-    super(props);
-    this.state = {
-    }
-    this.onKeyPressHandler = this.onKeyPressHandler.bind(this);
+    bucketItem : string;
 }
 
-onKeyPressHandler = (event: { key: string; }):void => {
-    if(event.key === 'Enter'){
-        console.log('enter press here! ')
-      }
+interface New {
+    handleClick : (data:string) => void;
 }
+
+type Props = IProps & AppState & New & RouteComponentProps
+
+
+class HomeContainer extends Component <Props,StateProps> {
+constructor(props:Props){
+    super(props);
+    this.state = {
+        bucketItem:""
+    }
+    
+    this.onKeyPressHandler = this.onKeyPressHandler.bind(this);
+    this.onBucketItemChange = this.onBucketItemChange.bind(this);
+}
+
+onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>):void => {
+    if(event.key === 'Enter'){
+        this.onAddItem()
+        this.setState({
+            bucketItem:"",
+        })
+      }
+    
+}
+
+onBucketItemChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
+    this.setState({
+        bucketItem: event.currentTarget.value,
+    })
+}
+
+onAddItem = ():void => {
+   this.props.handleClick(this.state.bucketItem);
+}
+
 render(){
-    const {onKeyPressHandler} = this;
     return(
         <div>
             <HomeComponent 
-                onKeyPressHandler={onKeyPressHandler}
+                {...this.state}
+                {...this}
+                {...this.props}
             />
         </div>
     );
 }
 }
+
+
+const mapStateToProps = (state: AppState) => ({
+    task: state.task,
+  });
+  
+  const mapDispatchToProps = (dispatch: Dispatch) => ({
+    handleClick: (data:string) => dispatch(addItem(data))
+  });
+// const mapStateToProps = (state:AppState) => {
+//     return {
+//         task: state.task
+//     }
+// }
+
+// const mapDispatchToProps = (dispatch: Dispatch) =>
+//   bindActionCreators(
+//     {
+//       addItem
+//     },
+//     dispatch
+//   );
+export default connect(mapStateToProps,mapDispatchToProps)(HomeContainer);
