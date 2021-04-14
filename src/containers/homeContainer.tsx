@@ -67,7 +67,7 @@ render(){
 }
 }
 
-const mapStateToProps = (state: AppState) => ({
+export const mapStateToProps = (state: AppState) => ({
     task: state.task,
   });
   

@@ -25,7 +25,6 @@ return(
         </ul>
         </div>
     </div>
-    
 );
 }
 
